@@ -97,7 +97,9 @@ function addThongKe() {
   var thongKeHang = {}; // Thống kê hãng
   var thongKeNgay = {}; // Thống kê theo ngày
   var thongKeSanPham = {}; // Thống kê theo sản phẩm
-
+  var thongKeThang = {}; // Thống kê theo tháng
+  var thongKeTuan = {}; // Thống kê tuần
+  var thongKeNam = {}; // Thống kê năm
   console.log(danhSachDonHang);
 
   danhSachDonHang.forEach((donHang) => {
@@ -134,7 +136,39 @@ function addThongKe() {
       }
       thongKeNgay[ngay].soLuongBanRa += soLuong;
       thongKeNgay[ngay].doanhThu += thanhTien;
-
+      //thống kê theo tháng
+      let thang = new Date(donHang.ngaygio);
+      thang = thang.getMonth() + 1 + "-" + thang.getFullYear();
+      if (!thongKeThang[thang]) {
+        thongKeThang[thang] = {
+          soLuongBanRa: 0,
+          doanhThu: 0,
+        };
+      }
+      thongKeThang[thang].soLuongBanRa += soLuong;
+      thongKeThang[thang].doanhThu += thanhTien;
+      //thống kê theo năm
+      let nam = new Date(donHang.ngaygio);
+      nam = nam.getFullYear();
+      if (!thongKeNam[nam]) {
+        thongKeNam[nam] = {
+          soLuongBanRa: 0,
+          doanhThu: 0,
+        };
+      }
+      thongKeNam[nam].soLuongBanRa += soLuong;
+      thongKeNam[nam].doanhThu += thanhTien;
+      //thống kê theo tuần
+      let tuan = new Date(donHang.ngaygio);
+      tuan = tuan.getDay();
+      if (!thongKeTuan[tuan]) {
+        thongKeTuan[tuan] = {
+          soLuongBanRa: 0,
+          doanhThu: 0,
+        };
+      }
+      thongKeTuan[tuan].soLuongBanRa += soLuong;
+      thongKeTuan[tuan].doanhThu += thanhTien;
       // thống kê sản phẩm
       if (!thongKeSanPham[sanPhamTrongDonHang.sanPham.name]) {
         thongKeSanPham[sanPhamTrongDonHang.sanPham.name] = {
@@ -153,7 +187,10 @@ function addThongKe() {
     Math.max(
       Object.keys(thongKeHang).length,
       Object.keys(thongKeNgay).length,
-      Object.keys(thongKeSanPham).length
+      Object.keys(thongKeSanPham).length,
+      Object.keys(thongKeThang).length,
+      Object.keys(thongKeTuan).length,
+      Object.keys(thongKeNam).length
     )
   );
 
@@ -205,6 +242,71 @@ function addThongKe() {
   addChart(
     "myChart4",
     createChartConfig(
+      "Sản phẩm theo tuần",
+      "bar",
+      Object.keys(thongKeTuan),
+      Object.values(thongKeTuan).map((_) => _.soLuongBanRa),
+      colors
+    )
+  );
+
+  addChart(
+    "myChart5",
+    createChartConfig(
+      "Doanh thu theo tuần",
+      "bar",
+      Object.keys(thongKeTuan),
+      Object.values(thongKeTuan).map((_) => _.doanhThu),
+      colors
+    )
+  );
+
+  addChart(
+    "myChart6",
+    createChartConfig(
+      "Sản phẩm theo tháng",
+      "bar",
+      Object.keys(thongKeThang),
+      Object.values(thongKeThang).map((_) => _.soLuongBanRa),
+      colors
+    )
+  );
+
+  addChart(
+    "myChart7",
+    createChartConfig(
+      "Doanh thu theo tháng",
+      "bar",
+      Object.keys(thongKeThang),
+      Object.values(thongKeThang).map((_) => _.doanhThu),
+      colors
+    )
+  );
+  addChart(
+    "myChart8",
+    createChartConfig(
+      "Sản phẩm theo năm",
+      "bar",
+      Object.keys(thongKeNam),
+      Object.values(thongKeNam).map((_) => _.soLuongBanRa),
+      colors
+    )
+  );
+
+  addChart(
+    "myChart9",
+    createChartConfig(
+      "Doanh thu theo năm",
+      "bar",
+      Object.keys(thongKeNam),
+      Object.values(thongKeNam).map((_) => _.doanhThu),
+      colors
+    )
+  );
+
+  addChart(
+    "myChart10",
+    createChartConfig(
       "Sản phẩm bán chạy",
       "bar",
       Object.keys(thongKeSanPham),
@@ -212,7 +314,6 @@ function addThongKe() {
       colors
     )
   );
-
   //   var doughnutChart = copyObject(dataChart);
   //   doughnutChart.type = "doughnut";
   //   addChart("myChart5", doughnutChart);
